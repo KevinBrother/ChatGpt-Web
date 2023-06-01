@@ -3,7 +3,7 @@ import { Button, Modal, Popconfirm, Space, Tabs, Select, message } from 'antd'
 import { useLayoutEffect, useMemo, useRef, useState } from 'react'
 
 import styles from './index.module.less'
-import { chatStore, configStore, userStore } from '@/store'
+import { chatStore, configStore } from '@/store'
 import RoleNetwork from './components/RoleNetwork'
 import RoleLocal from './components/RoleLocal'
 import AllInput from './components/AllInput'
@@ -19,7 +19,6 @@ import Layout from '@/components/Layout'
 function ChatPage() {
   const scrollRef = useRef<HTMLDivElement>(null)
   const { scrollToBottomIfAtBottom, scrollToBottom } = useScroll(scrollRef.current)
-  const { token, setLoginModal } = userStore()
   const { config, models, changeConfig, setConfigModal } = configStore()
   const {
     chats,
@@ -114,7 +113,7 @@ function ChatPage() {
       })
       setChatDataInfo(selectChatId, assistantMessageId, {
         status: 'error',
-		text: `\`\`\`json
+        text: `\`\`\`json
 ${JSON.stringify(response, null, 4)}
 \`\`\`
 `
@@ -180,10 +179,6 @@ ${JSON.stringify(response, null, 4)}
 
   // 对话
   async function sendChatCompletions(vaule: string) {
-    if (!token) {
-      setLoginModal(true)
-      return
-    }
     const parentMessageId = chats.filter((c) => c.id === selectChatId)[0].id
     const userMessageId = generateUUID()
     const requestOptions = {
@@ -338,7 +333,7 @@ ${JSON.stringify(response, null, 4)}
                     status={item.status}
                     content={item.text}
                     time={item.dateTime}
-					model={item.requestOptions.options?.model}
+                    model={item.requestOptions.options?.model}
                     onDelChatMessage={() => {
                       delChatMessage(selectChatId, item.id)
                     }}

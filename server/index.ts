@@ -12,7 +12,9 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
 app.all('/api/*', (req, res) => {
-  res.status(404).json({ code: -1, data: [], message: 'The current access API address does not exist' })
+  res
+    .status(200)
+    .json({ code: -1, data: [], message: 'The current access API address does not exist' })
 })
 
 // 渲染页面
@@ -21,6 +23,6 @@ app.get('*', (req, res) => {
 })
 
 // 启动服务器
-app.listen(3333, () => {
-  console.log('Server is running on port 3333')
+app.listen(3200, () => {
+  console.log('Server is running on port 3200')
 })

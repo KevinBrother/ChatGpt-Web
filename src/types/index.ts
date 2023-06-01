@@ -58,8 +58,28 @@ export interface PromptInfo {
 
 export interface RequestChatOptions {
   prompt: string
-  options?: Omit<ChatGptConfig, 'api' | 'api_key'>
+  options: ChatGptConfig
   parentMessageId?: string
+}
+
+export interface RequestOpenChatOptions {
+  id: string
+  object: string
+  created: number
+  choices: {
+    index: number
+    message: {
+      role: 'assistant' | 'user' | string
+      content: string
+    }
+    finish_reason: 'stop' | string
+  }[]
+
+  usage: {
+    prompt_tokens: number
+    completion_tokens: number
+    total_tokens: number
+  }
 }
 
 // 请求Openai 或者 其他代理

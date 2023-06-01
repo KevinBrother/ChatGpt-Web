@@ -1,5 +1,5 @@
 import { notification } from 'antd'
-import { userStore } from '@/store'
+import { RequestChatOptions, RequestOpenChatOptions } from '@/types'
 
 export type ResponseData<T> = {
   code: number
@@ -53,21 +53,21 @@ const isPlainObject = (obj: any) => {
 
 // 请求拦截器
 const interceptorsRequest = (config: { url: string; options?: RequestInit }) => {
-  console.log('请求拦截器', config)
   const options = {
     ...config.options,
     headers: {
       ...config.options?.headers,
-      token: userStore.getState().token
+      Authorization: `Bearer ${import.meta.env.API_KEP}`
     }
   }
+  console.log('请求拦截器', config, options)
   return { ...options }
 }
 
 // 响应拦截器
 const interceptorsResponse = async <T>(options: any, response: any): Promise<ResponseData<T>> => {
-  console.log('响应拦截器：', options, response)
   let data: ResponseData<T> = await response.json()
+  console.log('响应拦截器：', options, response, data)
 
   if (!isResponseData(data)) {
     data = {
@@ -78,9 +78,6 @@ const interceptorsResponse = async <T>(options: any, response: any): Promise<Res
   }
 
   if (data.code) {
-    if (response.status === 401) {
-      userStore.getState().logout()
-    }
     if (data.message) {
       notification.error({
         message: '错误',
@@ -280,18 +277,27 @@ const del = <T = unknown>(
 
 const postStreams = async <T>(
   url: string,
-  data?: { [key: string]: any } | string | any,
+  data: RequestChatOptions,
   o?: {
     headers?: HeadersInit
     options?: { [key: string]: any }
   }
 ) => {
   const baseUrl = getBaseUrl(url)
+  const body: RequestOpenChatOptions = {
+    ...data?.options,
+    messages: [
+      {
+        content: data.prompt,
+        role: 'user'
+      }
+    ]
+  }
   const options: { [key: string]: any } = interceptorsRequest({
     url,
     options: {
       method: 'POST',
-      body: JSON.stringify(data),
+      body: JSON.stringify(body),
       headers: correctHeaders('POST', o?.headers),
       ...o?.options
     }
