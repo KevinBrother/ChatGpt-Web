@@ -57,7 +57,7 @@ const interceptorsRequest = (config: { url: string; options?: RequestInit }) => 
     ...config.options,
     headers: {
       ...config.options?.headers,
-      Authorization: `Bearer ${import.meta.env.API_KEP}`
+      Authorization: `Bearer ${import.meta.env.VITE_GPT_API_KEY}`
     }
   }
   console.log('请求拦截器', config, options)

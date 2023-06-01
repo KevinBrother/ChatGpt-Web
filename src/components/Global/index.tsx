@@ -1,4 +1,4 @@
-import { chatStore, configStore } from '@/store'
+import { configStore } from '@/store'
 import { useLayoutEffect } from 'react'
 import ConfigModal from '../ConfigModal'
 import { notification } from 'antd'
@@ -10,7 +10,6 @@ type Props = {
 
 function Global(props: Props) {
   const { models, config, configModal, changeConfig, setConfigModal, notifications } = configStore()
-  const { chats, addChat, changeSelectChatId } = chatStore()
 
   const openNotification = ({
     key,
