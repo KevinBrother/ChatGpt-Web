@@ -67,7 +67,6 @@ const interceptorsRequest = (config: { url: string; options?: RequestInit }) => 
 // 响应拦截器
 const interceptorsResponse = async <T>(options: any, response: any): Promise<ResponseData<T>> => {
   let data: ResponseData<T> = await response.json()
-  console.log('响应拦截器：', options, response, data)
 
   if (!isResponseData(data)) {
     data = {
@@ -89,6 +88,7 @@ const interceptorsResponse = async <T>(options: any, response: any): Promise<Res
       })
     }
   }
+  console.log('响应拦截器：', options, response, data)
   return data
 }
 

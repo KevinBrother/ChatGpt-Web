@@ -1,6 +1,6 @@
 import { CommentOutlined, DeleteOutlined } from '@ant-design/icons'
 import { Button, Modal, Popconfirm, Space, Tabs, Select, message } from 'antd'
-import { useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 
 import styles from './index.module.less'
 import { chatStore, configStore } from '@/store'
@@ -55,6 +55,11 @@ function ChatPage() {
     return chatList[0].data
   }, [selectChatId, chats])
 
+  console.log(
+    '%c [ chatMessages ]-329',
+    'font-size:13px; background:pink; color:#bf2c9f;',
+    chatMessages
+  )
   // 创建对话按钮
   const CreateChat = () => {
     return (
@@ -136,8 +141,18 @@ ${JSON.stringify(response, null, 4)}
       const text = new TextDecoder('utf-8').decode(value)
       const texts = handleChatData(text)
       for (let i = 0; i < texts.length; i++) {
+        console.log(
+          '%c [ texts[i] ]-145',
+          'font-size:13px; background:pink; color:#bf2c9f;',
+          texts[i]
+        )
         const { dateTime, role, content, segment } = texts[i]
         allContent += content ? content : ''
+        console.log(
+          '%c [ allContent ]-146',
+          'font-size:13px; background:pink; color:#bf2c9f;',
+          allContent
+        )
         if (segment === 'stop') {
           setFetchController(null)
           setChatDataInfo(selectChatId, userMessageId, {
@@ -215,6 +230,37 @@ ${JSON.stringify(response, null, 4)}
       assistantMessageId
     })
   }
+
+  useEffect(() => {
+    const url = 'http://localhost:3200/api/sse'
+    // const sse = new EventSource(url)
+    // sse.onmessage = (ev) => {
+    //   console.log(ev.data)
+    // }
+
+    const headers = {
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache',
+      Connection: 'keep-alive',
+      Author: 1212,
+      'Access-Control-Allow-Origin': '*'
+    }
+
+    const body = { name: 'good' } // 请求体参数
+
+    const eventSource = new EventSource(url, { headers, body })
+
+    eventSource.onmessage = function (event) {
+      const eventData = JSON.parse(event.data)
+      // 处理接收到的数据
+      console.log(eventData)
+    }
+
+    eventSource.onerror = function (error) {
+      // 处理错误
+      console.log(error)
+    }
+  }, [])
 
   return (
     <div className={styles.chatPage}>

@@ -36,16 +36,6 @@ export const webRouter: RouteOptions[] = [
       verifToken: false,
       role: ['user', 'administrator']
     }
-  },
-  {
-    id: 'Page404',
-    path: '*',
-    element: <Page404 />,
-    children: [],
-    configure: {
-      verifToken: false,
-      role: ['user', 'administrator']
-    }
   }
 ]
 

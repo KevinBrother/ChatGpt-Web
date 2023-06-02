@@ -65,6 +65,7 @@ const configStore = create<ConfigState>()(
         temperature: 0,
         presence_penalty: 0,
         frequency_penalty: 0,
+        // stream: true,
         max_tokens: 1888
       },
       setConfigModal: (value) => set({ configModal: value }),

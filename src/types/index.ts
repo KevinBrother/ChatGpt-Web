@@ -49,6 +49,7 @@ export interface ChatGptConfig {
   // limit_message?: number
   // 单次回复限制
   max_tokens?: number
+  stream?: boolean
 }
 
 export interface PromptInfo {
@@ -142,12 +143,6 @@ export interface ImagesInfo extends RequestImagesGenerations {
 export interface SubscriptionInfo {
   hard_limit_usd: number
   has_payment_method: boolean
-}
-
-export interface RequesPrepay {
-  pay_type: 'alipay' | 'wxpay' | 'qqpay' | string
-  product_id: number
-  quantity: number
 }
 
 export interface ProductInfo {
