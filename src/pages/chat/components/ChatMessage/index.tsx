@@ -90,7 +90,6 @@ function ChatMessage({
     return mdi.render(value)
   }, [content])
 
-  console.log('%c [ text ]-90', 'font-size:13px; background:pink; color:#bf2c9f;', text)
   useEffect(() => {
     addCopyEvents()
     return () => {

@@ -1,4 +1,4 @@
-import { RequestChatOptions } from '@/types'
+import { RequestChatOptions, RequestOpenChatOptions } from '@/types'
 import { EventSourceMessage, fetchEventSource } from '@microsoft/fetch-event-source'
 import request from '.'
 // 请求对话
@@ -13,7 +13,7 @@ export function prePostChatCompletions(
 }
 
 export function postChatCompletions(
-  requestOptions: RequestChatOptions,
+  messages: RequestOpenChatOptions['messages'],
   signal: AbortSignal,
   config?: {
     headers?: { [key: string]: any }
@@ -21,14 +21,8 @@ export function postChatCompletions(
   },
   onmessage?: (ev: EventSourceMessage) => void
 ) {
-  // return request.postStreams<Response>('/chat/completions', params, config)
   const body = {
-    messages: [
-      {
-        role: 'user',
-        content: requestOptions.prompt
-      }
-    ],
+    messages,
     model: 'gpt-3.5-turbo',
     stream: true
   }

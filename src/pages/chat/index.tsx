@@ -70,12 +70,6 @@ function ChatPage() {
           marginRight: 0
         }}
         onClick={() => {
-          // if (!token) {
-          //   setLoginOptions({
-          //     open: true
-          //   })
-          //   return
-          // }
           addChat()
         }}
       >
@@ -96,15 +90,19 @@ function ChatPage() {
     signal: AbortSignal
   }) {
     let result = ''
-    // let isDone = false
     let status = 'loading'
+
+    const currentMessage = {
+      content: requestOptions.prompt,
+      role: 'user'
+    }
 
     const initialMessage = {
       requestOptions,
       role: 'assistant'
     }
 
-    await postChatCompletions(requestOptions, signal, {}, (ev) => {
+    await postChatCompletions([currentMessage], signal, {}, (ev) => {
       if (ev.data === '[DONE]') {
         status = 'pass'
         setLoading(false)
