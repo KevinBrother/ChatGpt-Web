@@ -1,14 +1,9 @@
 import { MenuDataItem, ProLayout } from '@ant-design/pro-components'
-import { ChatsInfo } from '@/types'
 import React from 'react'
 import { MenuProps } from 'antd'
 
 type Props = {
   menuExtraRender?: () => React.ReactNode
-  route?: {
-    path: string
-    routes: Array<ChatsInfo>
-  }
   menuItemRender?: (
     item: MenuDataItem & {
       isUrl: boolean
@@ -51,7 +46,6 @@ function Layout(props: Props) {
       siderWidth={300}
       menuExtraRender={menuExtraRender}
       menuItemRender={menuItemRender}
-      route={props.route}
       menuDataRender={props.menuDataRender}
       avatarProps={{
         src: 'http://rpa-docs.datagrand.com/v13_6/images/logo.png',

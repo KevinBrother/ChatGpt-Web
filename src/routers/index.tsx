@@ -14,23 +14,12 @@ export interface RouteOptions extends Omit<Omit<RouteObject, 'children'>, 'index
 }
 
 const ChatPage = React.lazy(() => import('@/pages/chat'))
-const Page404 = React.lazy(() => import('@/pages/404'))
 
 export const webRouter: RouteOptions[] = [
   {
     id: 'ChatPage',
     path: '/',
     element: <ChatPage />,
-    children: [],
-    configure: {
-      verifToken: false,
-      role: ['user', 'administrator']
-    }
-  },
-  {
-    id: 'Page404',
-    path: '/404',
-    element: <Page404 />,
     children: [],
     configure: {
       verifToken: false,
