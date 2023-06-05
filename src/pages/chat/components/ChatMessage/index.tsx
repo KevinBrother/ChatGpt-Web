@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useRef } from 'react'
 import { copyToClipboard, joinTrim } from '@/utils'
 import styles from './index.module.less'
-import OpenAiLogo from '@/components/OpenAiLogo'
 import { Space, Popconfirm, message } from 'antd'
 import MarkdownIt from 'markdown-it'
 import mdKatex from '@traptitech/markdown-it-katex'
@@ -153,21 +152,16 @@ function ChatMessage({
             position === 'right' ? styles.right : styles.left
           ])}
         >
-          {/* {`statsu : ${status} ,  content: ${content}===== \n`} */}
-          {status === 'loading' && content ? (
-            <OpenAiLogo rotate />
-          ) : (
-            <div>
-              {content}
-              {/*  <div
+          {/* {`statsu : ${status} ,  content: ${content} \n`} */}
+          <div>
+            <div
               ref={markdownBodyRef}
               className={'markdown-body'}
               dangerouslySetInnerHTML={{
                 __html: text
               }}
-              /> */}
-            </div>
-          )}
+            />
+          </div>
         </div>
       </div>
       {position === 'right' &&

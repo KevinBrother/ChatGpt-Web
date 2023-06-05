@@ -1,5 +1,5 @@
 import { CommentOutlined, DeleteOutlined } from '@ant-design/icons'
-import { Button, Modal, Popconfirm, Space, Tabs, Select, message } from 'antd'
+import { Button, Modal, Popconfirm, Space, Tabs, Select } from 'antd'
 import { useLayoutEffect, useMemo, useRef, useState } from 'react'
 
 import styles from './index.module.less'
@@ -9,9 +9,9 @@ import RoleLocal from './components/RoleLocal'
 import AllInput from './components/AllInput'
 import ChatMessage from './components/ChatMessage'
 import { RequestChatOptions } from '@/types'
-import { postChatCompletions, prePostChatCompletions } from '@/request/api'
+import { postChatCompletions } from '@/request/api'
 import Reminder from '@/components/Reminder'
-import { filterObjectNull, formatTime, generateUUID, handleChatData } from '@/utils'
+import { filterObjectNull, formatTime, generateUUID } from '@/utils'
 import { useScroll } from '@/hooks/useScroll'
 import useDocumentResize from '@/hooks/useDocumentResize'
 import Layout from '@/components/Layout'
@@ -20,7 +20,9 @@ function ChatPage() {
   const scrollRef = useRef<HTMLDivElement>(null)
   const { scrollToBottomIfAtBottom, scrollToBottom } = useScroll(scrollRef.current)
   const { config, models, changeConfig, setConfigModal } = configStore()
-  const [fetchController, setFetchController] = useState<AbortController | null>(null)
+  const [loading, setLoading] = useState(false)
+  const fetchController = useRef(new AbortController())
+
   const {
     chats,
     addChat,
@@ -83,110 +85,15 @@ function ChatPage() {
   }
 
   // 对接服务端方法
-  // @despatched
-  async function preSserverChatCompletions({
-    requestOptions,
-    signal,
-    userMessageId,
-    assistantMessageId
-  }: {
-    userMessageId: string
-    signal: AbortSignal
-    requestOptions: RequestChatOptions
-    assistantMessageId: string
-  }) {
-    const response = await prePostChatCompletions(requestOptions, {
-      options: {
-        signal
-      }
-    })
-      .then((res) => {
-        return res
-      })
-      .catch((error) => {
-        // 终止： AbortError
-        console.log(error.name)
-      })
-
-    if (!(response instanceof Response)) {
-      // 这里返回是错误 ...
-      setChatDataInfo(selectChatId, userMessageId, {
-        status: 'error'
-      })
-      setChatDataInfo(selectChatId, assistantMessageId, {
-        status: 'error',
-        text: `\`\`\`json
-${JSON.stringify(response, null, 4)}
-\`\`\`
-`
-      })
-      fetchController?.abort()
-      setFetchController(null)
-      message.error('请求失败')
-      return
-    }
-    const reader = response.body?.getReader?.()
-    let allContent = ''
-    while (true) {
-      const { done, value } = (await reader?.read()) || {}
-      if (done) {
-        fetchController?.abort()
-        setFetchController(null)
-        break
-      }
-      // 将获取到的数据片段显示在屏幕上
-      const text = new TextDecoder('utf-8').decode(value)
-      const texts = handleChatData(text)
-      for (let i = 0; i < texts.length; i++) {
-        const { dateTime, role, content, segment } = texts[i]
-        allContent += content ? content : ''
-        if (segment === 'stop') {
-          setFetchController(null)
-          setChatDataInfo(selectChatId, userMessageId, {
-            status: 'pass'
-          })
-          setChatDataInfo(selectChatId, assistantMessageId, {
-            text: allContent,
-            dateTime,
-            status: 'pass'
-          })
-          break
-        }
-
-        if (segment === 'start') {
-          setChatDataInfo(selectChatId, userMessageId, {
-            status: 'pass'
-          })
-          setChatDataInfo(selectChatId, assistantMessageId, {
-            text: allContent,
-            dateTime,
-            status: 'loading',
-            role,
-            requestOptions
-          })
-        }
-        if (segment === 'text') {
-          setChatDataInfo(selectChatId, assistantMessageId, {
-            text: allContent,
-            dateTime,
-            status: 'pass'
-          })
-        }
-      }
-      scrollToBottomIfAtBottom()
-    }
-  }
-
-  // 对接服务端方法
   async function serverChatCompletions({
     requestOptions,
     signal,
     assistantMessageId
   }: {
     userMessageId: string
-    signal: AbortSignal
     requestOptions: RequestChatOptions
     assistantMessageId: string
+    signal: AbortSignal
   }) {
     let result = ''
     // let isDone = false
@@ -197,43 +104,27 @@ ${JSON.stringify(response, null, 4)}
       role: 'assistant'
     }
 
-    await postChatCompletions(
-      requestOptions,
-      {
-        options: {
-          signal
+    await postChatCompletions(requestOptions, signal, {}, (ev) => {
+      if (ev.data === '[DONE]') {
+        status = 'pass'
+        setLoading(false)
+      } else {
+        try {
+          const data = JSON.parse(ev.data)
+          result += data.choices[0].delta.content ? data.choices[0].delta.content : ''
+        } catch (error) {
+          console.log(error)
         }
-      },
-      (ev) => {
-        console.log('%c [ ev ]-40', 'font-size:13px; background:pink; color:#bf2c9f;', ev.data, ev)
-
-        if (ev.data === '[DONE]') {
-          status = 'pass'
-          fetchController?.abort()
-        } else {
-          try {
-            const data = JSON.parse(ev.data)
-            result += data.choices[0].delta.content ? data.choices[0].delta.content : ''
-          } catch (error) {
-            console.log('%c [ error ]-50', 'font-size:13px; background:pink; color:#bf2c9f;', error)
-          }
-        }
-
-        setChatDataInfo(selectChatId, assistantMessageId, {
-          ...initialMessage,
-          status,
-          text: result
-        })
-
-        scrollToBottomIfAtBottom()
-        console.log(
-          '%c [ result ]-43',
-          'font-size:13px; background:pink; color:#bf2c9f;',
-          result,
-          status
-        )
       }
-    )
+
+      setChatDataInfo(selectChatId, assistantMessageId, {
+        ...initialMessage,
+        status,
+        text: result
+      })
+
+      scrollToBottomIfAtBottom()
+    })
   }
 
   // 对话
@@ -264,12 +155,9 @@ ${JSON.stringify(response, null, 4)}
       role: 'assistant',
       requestOptions
     })
-    const controller = new AbortController()
-    const signal = controller.signal
-    setFetchController(controller)
     serverChatCompletions({
       requestOptions,
-      signal,
+      signal: fetchController.current.signal,
       userMessageId,
       assistantMessageId
     })
@@ -317,7 +205,6 @@ ${JSON.stringify(response, null, 4)}
           )
         }}
         menuFooterRender={(props) => {
-          //   if (props?.collapsed) return undefined;
           return (
             <Space direction="vertical" style={{ width: '100%' }}>
               <Select
@@ -345,10 +232,6 @@ ${JSON.stringify(response, null, 4)}
                 block
                 onClick={() => {
                   setConfigModal(true)
-                  // chatGptConfigform.setFieldsValue({
-                  //   ...config
-                  // })
-                  // setChatConfigModal({ open: true })
                 }}
               >
                 系统配置
@@ -404,10 +287,11 @@ ${JSON.stringify(response, null, 4)}
           </div>
           <div className={styles.chatPage_container_two}>
             <AllInput
-              disabled={!!fetchController}
+              disabled={loading}
               onSend={(value) => {
                 if (value.startsWith('/')) return
                 sendChatCompletions(value)
+                setLoading(true)
                 scrollToBottomIfAtBottom()
               }}
               clearMessage={() => {
@@ -415,10 +299,8 @@ ${JSON.stringify(response, null, 4)}
               }}
               onStopFetch={() => {
                 // 结束
-                setFetchController((c) => {
-                  c?.abort()
-                  return null
-                })
+                setLoading(false)
+                fetchController.current.abort()
               }}
             />
           </div>

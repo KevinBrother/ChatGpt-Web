@@ -1,8 +1,6 @@
 import { RequestChatOptions } from '@/types'
 import { EventSourceMessage, fetchEventSource } from '@microsoft/fetch-event-source'
 import request from '.'
-import { chatStore } from '@/store'
-import { generateUUID } from '@/utils'
 // 请求对话
 export function prePostChatCompletions(
   params: RequestChatOptions,
@@ -16,6 +14,7 @@ export function prePostChatCompletions(
 
 export function postChatCompletions(
   requestOptions: RequestChatOptions,
+  signal: AbortSignal,
   config?: {
     headers?: { [key: string]: any }
     options?: { [key: string]: any }
@@ -43,10 +42,9 @@ export function postChatCompletions(
       Authorization: `Bearer ${import.meta.env.VITE_GPT_API_KEY}`
     }
   }
-  const ctrl = new AbortController()
   fetchEventSource(url, {
     ...params,
-    signal: ctrl.signal,
+    signal,
     onmessage
   })
 }

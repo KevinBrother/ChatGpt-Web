@@ -82,6 +82,7 @@ function AllInput(props: Props) {
           }}
         />
       </AutoComplete>
+
       {props.disabled ? (
         <Button
           className={styles.allInput_button}
