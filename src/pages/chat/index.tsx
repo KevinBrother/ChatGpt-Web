@@ -10,11 +10,11 @@ import AllInput from './components/AllInput'
 import ChatMessage from './components/ChatMessage'
 import { RequestChatOptions } from '@/types'
 import { postChatCompletions } from '@/request/api'
-import Reminder from '@/components/Reminder'
+import Reminder from './components/Reminder'
 import { filterObjectNull, formatTime, generateUUID } from '@/utils'
-import { useScroll } from '@/hooks/useScroll'
-import useDocumentResize from '@/hooks/useDocumentResize'
-import Layout from '@/components/Layout'
+import { useScroll } from '@/pages/chat/hooks/useScroll'
+import useDocumentResize from '@/pages/chat/hooks/useDocumentResize'
+import Layout from './components/Layout'
 
 function ChatPage() {
   const scrollRef = useRef<HTMLDivElement>(null)

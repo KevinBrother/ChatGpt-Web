@@ -1,9 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './pages/App'
-import { BrowserRouter } from 'react-router-dom'
-import Global from './components/Global'
-import OpenAiLogo from './components/OpenAiLogo'
+import Global from './pages/chat/components/Global'
+import OpenAiLogo from './pages/chat/components/OpenAiLogo'
 
 import '@/styles/global.less'
 import '@/styles/markdown.less'
@@ -37,7 +35,7 @@ import ChatPage from './pages/chat'
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <Global>
     <React.Suspense
-      fallback={(
+      fallback={
         <div
           style={{
             width: '100vw',
@@ -49,7 +47,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
         >
           <OpenAiLogo rotate width="3em" height="3em" />
         </div>
-      )}
+      }
     >
       {/* <App /> */}
       <ChatPage />
