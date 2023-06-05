@@ -101,7 +101,7 @@ function ChatPage() {
       requestOptions,
       role: 'assistant'
     }
-
+    scrollToBottomIfAtBottom()
     await postChatCompletions([currentMessage], signal, {}, (ev) => {
       if (ev.data === '[DONE]') {
         status = 'pass'
@@ -120,8 +120,6 @@ function ChatPage() {
         status,
         text: result
       })
-
-      scrollToBottomIfAtBottom()
     })
   }
 
