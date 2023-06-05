@@ -26,6 +26,7 @@
   "dependencies": {
     "@ant-design/icons": "^5.0.1",
     "@ant-design/pro-components": "^2.4.4",
+    "@microsoft/fetch-event-source": "^2.0.1",
     "@traptitech/markdown-it-katex": "^3.6.0",
     "alipay-sdk": "^3.4.0",
     "antd": "5.5.0",

@@ -3,7 +3,6 @@ import { copyToClipboard, joinTrim } from '@/utils'
 import styles from './index.module.less'
 import OpenAiLogo from '@/components/OpenAiLogo'
 import { Space, Popconfirm, message } from 'antd'
-
 import MarkdownIt from 'markdown-it'
 import mdKatex from '@traptitech/markdown-it-katex'
 import mila from 'markdown-it-link-attributes'
@@ -92,6 +91,7 @@ function ChatMessage({
     return mdi.render(value)
   }, [content])
 
+  console.log('%c [ text ]-90', 'font-size:13px; background:pink; color:#bf2c9f;', text)
   useEffect(() => {
     addCopyEvents()
     return () => {
@@ -133,7 +133,10 @@ function ChatMessage({
       {position === 'left' &&
         chatAvatar({
           style: { marginRight: 8 },
-          icon: model && model.indexOf('gpt-4') !== -1 ? 'https://files.catbox.moe/x5v8wq.png' : 'https://files.catbox.moe/lnulfa.png'
+          icon:
+            model && model.indexOf('gpt-4') !== -1
+              ? 'https://files.catbox.moe/x5v8wq.png'
+              : 'https://files.catbox.moe/lnulfa.png'
         })}
       <div className={styles.chatMessage_content}>
         <span
@@ -150,16 +153,20 @@ function ChatMessage({
             position === 'right' ? styles.right : styles.left
           ])}
         >
-          {status === 'loading' ? (
+          {/* {`statsu : ${status} ,  content: ${content}===== \n`} */}
+          {status === 'loading' && content ? (
             <OpenAiLogo rotate />
           ) : (
-            <div
+            <div>
+              {content}
+              {/*  <div
               ref={markdownBodyRef}
               className={'markdown-body'}
               dangerouslySetInnerHTML={{
                 __html: text
               }}
-            />
+              /> */}
+            </div>
           )}
         </div>
       </div>

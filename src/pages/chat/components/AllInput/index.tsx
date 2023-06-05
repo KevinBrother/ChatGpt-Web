@@ -1,10 +1,8 @@
-import { AutoComplete, Button, Input, Modal, message } from 'antd'
+import { AutoComplete, Button, Input } from 'antd'
 import styles from './index.module.less'
-import { ClearOutlined, CloudDownloadOutlined, SyncOutlined } from '@ant-design/icons'
+import { ClearOutlined, SyncOutlined } from '@ant-design/icons'
 import { useMemo, useState } from 'react'
 import { promptStore } from '@/store'
-import html2canvas from 'html2canvas'
-import useDocumentResize from '@/hooks/useDocumentResize'
 
 type Props = {
   onSend: (value: string) => void
@@ -16,13 +14,6 @@ type Props = {
 function AllInput(props: Props) {
   const [prompt, setPrompt] = useState('')
   const { localPrompt } = promptStore()
-
-  const bodyResize = useDocumentResize()
-
-  const [downloadModal, setDownloadModal] = useState({
-    open: false,
-    loading: false
-  })
 
   const searchOptions = useMemo(() => {
     if (prompt.startsWith('/')) {
@@ -41,46 +32,8 @@ function AllInput(props: Props) {
     }
   }, [prompt])
 
-  // 保存聊天记录到图片
-  async function downloadChatRecords() {
-    try {
-      setDownloadModal((d) => ({ ...d, loading: true }))
-      const ele = document.getElementById('image-wrapper')
-      const canvas = await html2canvas(ele as HTMLDivElement, {
-        useCORS: true
-      })
-      const imgUrl = canvas.toDataURL('image/png')
-      const tempLink = document.createElement('a')
-      tempLink.style.display = 'none'
-      tempLink.href = imgUrl
-      tempLink.setAttribute('download', 'chat-shot.png')
-      if (typeof tempLink.download === 'undefined') tempLink.setAttribute('target', '_blank')
-      document.body.appendChild(tempLink)
-      tempLink.click()
-      document.body.removeChild(tempLink)
-      window.URL.revokeObjectURL(imgUrl)
-      setDownloadModal(() => ({ open: false, loading: false }))
-      Promise.resolve()
-    } catch (error: any) {
-      message.error('下载聊天记录失败')
-      Promise.reject()
-    } finally {
-      setDownloadModal((d) => ({ ...d, loading: false }))
-    }
-  }
-
   return (
     <div className={styles.allInput}>
-      {bodyResize.width > 800 && (
-        <div
-          className={styles.allInput_icon}
-          onClick={() => {
-            setDownloadModal((d) => ({ ...d, open: true }))
-          }}
-        >
-          <CloudDownloadOutlined />
-        </div>
-      )}
       <div
         className={styles.allInput_icon}
         onClick={() => {
@@ -157,20 +110,6 @@ function AllInput(props: Props) {
           发送
         </Button>
       )}
-
-      <Modal
-        title="保存当前对话记录"
-        open={downloadModal.open}
-        onOk={() => {
-          downloadChatRecords()
-        }}
-        confirmLoading={downloadModal.loading}
-        onCancel={() => {
-          setDownloadModal({ open: false, loading: false })
-        }}
-      >
-        <p>是否将当前对话记录保存为图片？</p>
-      </Modal>
     </div>
   )
 }
