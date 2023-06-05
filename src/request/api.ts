@@ -1,17 +1,6 @@
-import { RequestChatOptions, RequestOpenChatOptions } from '@/types'
+import { RequestOpenChatOptions } from '@/types'
 import { EventSourceMessage, fetchEventSource } from '@microsoft/fetch-event-source'
-import request from '.'
 // 请求对话
-export function prePostChatCompletions(
-  params: RequestChatOptions,
-  config?: {
-    headers?: { [key: string]: any }
-    options?: { [key: string]: any }
-  }
-) {
-  return request.postStreams<Response>('/chat/completions', params, config)
-}
-
 export function postChatCompletions(
   messages: RequestOpenChatOptions['messages'],
   signal: AbortSignal,

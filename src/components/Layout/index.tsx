@@ -54,7 +54,7 @@ function Layout(props: Props) {
       route={props.route}
       menuDataRender={props.menuDataRender}
       avatarProps={{
-        src: 'https://cdn.jsdelivr.net/gh/duogongneng/testuitc/1682426702646avatarf3db669b024fad66-1930929abe2847093.png',
+        src: 'http://rpa-docs.datagrand.com/v13_6/images/logo.png',
         size: 'small',
         render: (props, dom) => <>{dom}</>
       }}

@@ -5,7 +5,5 @@ export * from './generateChatInfo'
 export * from './formatTime'
 export * from './filterObjectNull'
 export * from './copyToClipboard'
-export * from './getEmailPre'
-export * from './handleChatData'
 import is from './is'
 export { is }

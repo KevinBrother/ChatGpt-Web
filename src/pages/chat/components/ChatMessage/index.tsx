@@ -166,7 +166,7 @@ function ChatMessage({
       {position === 'right' &&
         chatAvatar({
           style: { marginLeft: 8 },
-          icon: 'https://u1.dl0.cn/icon/1682426702646avatarf3db669b024fad66-1930929abe2847093.png'
+          icon: 'http://rpa-docs.datagrand.com/v13_6/images/logo.png'
         })}
     </div>
   )

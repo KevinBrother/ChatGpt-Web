@@ -1,37 +1,3 @@
-import { NotificationInfo } from './admin'
-
-export interface RequestLoginParams {
-  account: string
-  code?: string | number
-  password?: string
-}
-
-export interface UserInfo {
-  id: string
-  account: string
-  nickname: string
-  avatar: string
-  role: string
-  integral: number
-  vip_expire_time: string
-  svip_expire_time: string
-  ip: string
-  status: number
-  create_time: string
-  update_time: string
-  is_signin: number
-}
-
-export interface ResponseLoginData {
-  user_info: UserInfo
-  token?: string
-}
-export interface ResponseConfigData {
-  shop_introduce: string
-  user_introduce: string
-  notifications: NotificationInfo[]
-}
-
 export interface ChatGptConfig {
   // api
   // api: string
@@ -62,27 +28,6 @@ export interface RequestChatOptions {
   options: ChatGptConfig
   parentMessageId?: string
 }
-
-export interface RequestOpenChatOptions {
-  id: string
-  object: string
-  created: number
-  choices: {
-    index: number
-    message: {
-      role: 'assistant' | 'user' | string
-      content: string
-    }
-    finish_reason: 'stop' | string
-  }[]
-
-  usage: {
-    prompt_tokens: number
-    completion_tokens: number
-    total_tokens: number
-  }
-}
-
 // 请求Openai 或者 其他代理
 export interface RequestOpenChatOptions {
   model: string
@@ -124,61 +69,4 @@ export interface ChatGpt {
   status: 'pass' | 'loading' | 'error'
   role: 'assistant' | 'user' | string
   requestOptions: RequestChatOptions
-}
-
-export interface RequestImagesGenerations {
-  prompt: string
-  n?: number
-  size?: string
-  response_format?: string
-}
-
-export interface ImagesInfo extends RequestImagesGenerations {
-  id: string
-  dateTime: string
-  url: string
-}
-
-// 三方订阅 信息
-export interface SubscriptionInfo {
-  hard_limit_usd: number
-  has_payment_method: boolean
-}
-
-export interface ProductInfo {
-  id: number
-  title: string
-  price: number
-  original_price: number
-  badge: string
-  value: number
-  status: number
-  type: string
-  level: number
-  create_time: string
-  update_time: string
-}
-
-export interface TurnoverInfo {
-  id: string
-  user_id: string
-  value: string
-  describe: string
-  create_time: string
-  update_time: string
-}
-
-export interface PayTypeInfo {
-  icon: string
-  key: string
-  title: string
-}
-
-export interface SigninInfo {
-  id: number
-  user_id: string
-  ip: string
-  status: number
-  create_time: string
-  update_time: string
 }
