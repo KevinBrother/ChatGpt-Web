@@ -1,6 +1,6 @@
 import menuList from '@/routers/menu_list'
 import styles from './index.module.less'
-import { joinTrim } from '@/utils'
+import { joinTrim } from '../../utils'
 import { Link, useLocation } from 'react-router-dom'
 import { useMemo } from 'react'
 

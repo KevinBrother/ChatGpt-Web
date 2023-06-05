@@ -1,4 +1,4 @@
-import useDocumentResize from '@/pages/chat/hooks/useDocumentResize'
+import useDocumentResize from '../../hooks/useDocumentResize'
 import styles from './index.module.less'
 
 type Props = {

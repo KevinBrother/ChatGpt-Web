@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef } from 'react'
-import { copyToClipboard, joinTrim } from '@/utils'
+import { copyToClipboard, joinTrim } from '../../utils'
 import styles from './index.module.less'
 import { Space, Popconfirm, message } from 'antd'
 import MarkdownIt from 'markdown-it'

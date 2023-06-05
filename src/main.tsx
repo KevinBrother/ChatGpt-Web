@@ -3,9 +3,9 @@ import ReactDOM from 'react-dom/client'
 import Global from './pages/chat/components/Global'
 import OpenAiLogo from './pages/chat/components/OpenAiLogo'
 
-import '@/styles/global.less'
-import '@/styles/markdown.less'
-import '@/styles/highlight.less'
+import './pages/chat/styles/global.less'
+import './pages/chat/styles/markdown.less'
+import './pages/chat/styles/highlight.less'
 import ChatPage from './pages/chat'
 
 /* ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(

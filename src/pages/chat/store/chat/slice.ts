@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
-import { ChatGpt, ChatsInfo } from '@/types'
-import { formatTime, generateChatInfo } from '@/utils'
+import { ChatGpt, ChatsInfo } from '../../types'
+import { formatTime, generateChatInfo } from '../../utils'
 
 export interface ChatState {
   // 聊天对话

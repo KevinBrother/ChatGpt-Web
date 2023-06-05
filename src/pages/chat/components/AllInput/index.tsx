@@ -2,7 +2,7 @@ import { AutoComplete, Button, Input } from 'antd'
 import styles from './index.module.less'
 import { ClearOutlined, SyncOutlined } from '@ant-design/icons'
 import { useMemo, useState } from 'react'
-import { promptStore } from '@/store'
+import { promptStore } from '../../store'
 
 type Props = {
   onSend: (value: string) => void

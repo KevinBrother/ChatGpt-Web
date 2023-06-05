@@ -1,10 +1,10 @@
-import recommend from '@/assets/recommend.json'
+import recommend from '../../assets/recommend.json'
 import styles from './index.module.less'
-import { is } from '@/utils'
+import { is } from '../../utils'
 import { FolderAddOutlined, LinkOutlined } from '@ant-design/icons'
 import { Input, message } from 'antd'
 import { useState } from 'react'
-import { promptStore } from '@/store'
+import { promptStore } from '../../store'
 
 function RoleNetwork() {
   const { addPrompts } = promptStore()

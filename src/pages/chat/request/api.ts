@@ -1,4 +1,4 @@
-import { RequestOpenChatOptions } from '@/types'
+import { RequestOpenChatOptions } from '../types'
 import { EventSourceMessage, fetchEventSource } from '@microsoft/fetch-event-source'
 // 请求对话
 export function postChatCompletions(

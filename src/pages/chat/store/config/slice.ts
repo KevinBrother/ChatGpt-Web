@@ -1,7 +1,6 @@
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
-import { ChatGptConfig } from '@/types'
-import { NotificationInfo } from '@/types/admin'
+import { ChatGptConfig } from '../../types'
 
 export interface ConfigState {
   // 配置信息
@@ -17,7 +16,6 @@ export interface ConfigState {
   setConfigModal: (value: boolean) => void
   // 修改配置
   changeConfig: (config: ChatGptConfig) => void
-  notifications: Array<NotificationInfo>
   shop_introduce: string
   user_introduce: string
   replaceData: (config: { [key: string]: any }) => void
@@ -27,7 +25,6 @@ const configStore = create<ConfigState>()(
   persist(
     (set, get) => ({
       configModal: false,
-      notifications: [],
       shop_introduce: '',
       user_introduce: '',
       models: [

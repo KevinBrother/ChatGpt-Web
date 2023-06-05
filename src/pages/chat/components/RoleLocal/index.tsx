@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react'
-import { promptStore } from '@/store'
-import { paginate } from '@/utils'
+import { promptStore } from '../../store'
+import { paginate } from '../../utils'
 import { Button, Empty, Form, Input, Pagination, Space, message } from 'antd'
 import styles from './index.module.less'
-import { PromptInfo } from '@/types'
+import { PromptInfo } from '../../types'
 import { DeleteOutlined, FormOutlined } from '@ant-design/icons'
 import { ModalForm, ProFormText, ProFormTextArea } from '@ant-design/pro-components'
 
