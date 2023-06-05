@@ -163,6 +163,10 @@ function ChatPage() {
     <div className={styles.chatPage}>
       <Layout
         menuExtraRender={() => <CreateChat />}
+        route={{
+          path: '/',
+          routes: chats
+        }}
         menuDataRender={(item) => {
           return item
         }}
