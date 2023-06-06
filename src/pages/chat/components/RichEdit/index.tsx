@@ -1,30 +1,19 @@
-import ReactQuill from 'react-quill'
-import 'react-quill/dist/quill.snow.css'
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import React from 'react';
 
-type Props = {
-	value?: string,
-	onChange: (value: string) => void;
+interface Props {
+  value?: string;
+  onChange: (value: string) => void;
 }
 
 function RichEdit(props: Props) {
   return (
     <ReactQuill
-      theme="snow"
+      theme='snow'
       value={props?.value}
       onChange={props.onChange}
-      formats={[
-        'header',
-        'bold',
-        'italic',
-        'underline',
-        'strike',
-        'blockquote',
-        'list',
-        'bullet',
-        'indent',
-        'link',
-        'image'
-      ]}
+      formats={['header', 'bold', 'italic', 'underline', 'strike', 'blockquote', 'list', 'bullet', 'indent', 'link', 'image']}
       modules={{
         toolbar: [
           [{ header: [1, 2, 3, 4, 5, false] }],
@@ -34,7 +23,7 @@ function RichEdit(props: Props) {
         ]
       }}
     />
-  )
+  );
 }
 
-export default RichEdit
+export default RichEdit;

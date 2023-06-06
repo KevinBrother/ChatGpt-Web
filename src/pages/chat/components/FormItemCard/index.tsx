@@ -1,14 +1,15 @@
-import useDocumentResize from '../../hooks/useDocumentResize'
-import styles from './index.module.less'
+import useDocumentResize from '../../hooks/useDocumentResize';
+import styles from './index.module.less';
+import React from 'react';
 
-type Props = {
-  title: string
-  describe: string
-  children?: React.ReactNode
+interface Props {
+  title: string;
+  describe: string;
+  children?: React.ReactNode;
 }
 
 function FormItemCard(props: Props) {
-  const { width } = useDocumentResize()
+  const { width } = useDocumentResize();
 
   return (
     <div
@@ -24,7 +25,7 @@ function FormItemCard(props: Props) {
       </div>
       <div className={styles.formItemCard_field}>{props.children}</div>
     </div>
-  )
+  );
 }
 
-export default FormItemCard
+export default FormItemCard;

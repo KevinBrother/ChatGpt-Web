@@ -1,12 +1,12 @@
-import { RequestOpenChatOptions } from '../types'
-import { EventSourceMessage, fetchEventSource } from '@microsoft/fetch-event-source'
+import { RequestOpenChatOptions } from '../types';
+import { EventSourceMessage, fetchEventSource } from '@microsoft/fetch-event-source';
 // 请求对话
 export function postChatCompletions(
   messages: RequestOpenChatOptions['messages'],
   signal: AbortSignal,
   config?: {
-    headers?: { [key: string]: any }
-    options?: { [key: string]: any }
+    headers?: { [key: string]: any };
+    options?: { [key: string]: any };
   },
   onmessage?: (ev: EventSourceMessage) => void
 ) {
@@ -14,9 +14,9 @@ export function postChatCompletions(
     messages,
     model: 'gpt-3.5-turbo',
     stream: true
-  }
+  };
 
-  const url = 'https://api.openai.com/v1/chat/completions'
+  const url = 'https://api.openai.com/v1/chat/completions';
   const params = {
     method: 'POST',
     body: JSON.stringify(body),
@@ -24,10 +24,10 @@ export function postChatCompletions(
       'Content-Type': 'application/json',
       Authorization: `Bearer ${import.meta.env.VITE_GPT_API_KEY}`
     }
-  }
+  };
   fetchEventSource(url, {
     ...params,
     signal,
     onmessage
-  })
+  });
 }

@@ -1,13 +1,13 @@
-import { configStore } from '../../store'
-import ConfigModal from '../ConfigModal'
-import React from 'react'
+import { configStore } from '../../store';
+import ConfigModal from '../ConfigModal';
+import React from 'react';
 
-type Props = {
-  children: React.ReactElement
+interface Props {
+  children: React.ReactElement;
 }
 
 function Global(props: Props) {
-  const { models, config, configModal, changeConfig, setConfigModal } = configStore()
+  const { models, config, configModal, changeConfig, setConfigModal } = configStore();
 
   return (
     <>
@@ -15,13 +15,13 @@ function Global(props: Props) {
       <ConfigModal
         open={configModal}
         onCancel={() => {
-          setConfigModal(false)
+          setConfigModal(false);
         }}
         models={models}
         onChange={changeConfig}
         data={config}
       />
     </>
-  )
+  );
 }
-export default Global
+export default Global;

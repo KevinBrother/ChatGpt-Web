@@ -1,2 +1,2 @@
-import chatAsync from './chat/async'
-export { chatAsync }
+import chatAsync from './chat/async';
+export { chatAsync };

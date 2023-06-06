@@ -1,83 +1,83 @@
-import { CommentOutlined, DeleteOutlined } from '@ant-design/icons'
-import { Button, Modal, Popconfirm, Space, Tabs, Select } from 'antd'
-import { useLayoutEffect, useMemo, useRef, useState } from 'react'
-
-import styles from './index.module.less'
-import { chatStore, configStore } from './store'
-import RoleNetwork from './components/RoleNetwork'
-import RoleLocal from './components/RoleLocal'
-import AllInput from './components/AllInput'
-import ChatMessage from './components/ChatMessage'
-import { RequestChatOptions } from './types'
-import { postChatCompletions } from './request/api'
-import Reminder from './components/Reminder'
-import { filterObjectNull, formatTime, generateUUID } from './utils'
-import { useScroll } from './hooks/useScroll'
-import useDocumentResize from './hooks/useDocumentResize'
-import Layout from './components/Layout'
+import { CommentOutlined, DeleteOutlined } from '@bixi-design/icons';
+import { Button, Modal, Popconfirm, Space, Tabs, Select } from 'antd';
+import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
+import styles from './index.module.less';
+import { chatStore, configStore } from '../store';
+import RoleNetwork from '../components/RoleNetwork';
+import RoleLocal from '../components/RoleLocal';
+import AllInput from '../components/AllInput';
+import ChatMessage from '../components/ChatMessage';
+import { RequestChatOptions } from '../types';
+import { postChatCompletions } from '../request/api';
+import Reminder from '../components/Reminder';
+import { filterObjectNull, formatTime, generateUUID } from '../utils';
+import { useScroll } from '../hooks/useScroll';
+import useDocumentResize from '../hooks/useDocumentResize';
+import Layout from '../components/Layout';
 
 function ChatPage() {
-  const scrollRef = useRef<HTMLDivElement>(null)
-  const { scrollToBottomIfAtBottom, scrollToBottom } = useScroll(scrollRef.current)
-  const { config, models, changeConfig, setConfigModal } = configStore()
-  const [loading, setLoading] = useState(false)
-  const fetchController = useRef(new AbortController())
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const { scrollToBottomIfAtBottom, scrollToBottom } = useScroll(scrollRef.current);
+  const { config, models, changeConfig, setConfigModal } = configStore();
+  const [loading, setLoading] = useState(false);
+  const fetchController = useRef(new AbortController());
 
   const {
     chats,
+    getSelectedChat,
     addChat,
     delChat,
     clearChats,
-    getSelectedChat,
     selectChatId,
     changeSelectChatId,
     setChatInfo,
     setChatDataInfo,
     clearChatMessage,
     delChatMessage
-  } = chatStore()
+  } = chatStore();
 
-  const bodyResize = useDocumentResize()
+  const bodyResize = useDocumentResize();
 
   // 角色预设
   const [roleConfigModal, setRoleConfigModal] = useState({
     open: false
-  })
+  });
 
   useLayoutEffect(() => {
     if (scrollRef) {
-      scrollToBottom()
+      scrollToBottom();
     }
-  }, [scrollRef.current, selectChatId, chats])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scrollRef.current, selectChatId, chats]);
 
   // 当前聊天记录
   const chatMessages = useMemo(() => {
-    const chatList = chats.filter((c) => c.id === selectChatId)
+    const chatList = chats.filter((c) => c.id === selectChatId);
     if (chatList.length <= 0) {
-      return []
+      return [];
     }
-    return chatList[0].data
-  }, [selectChatId, chats])
+    return chatList[0].data;
+  }, [selectChatId, chats]);
 
   // 创建对话按钮
   const CreateChat = () => {
     return (
       <Button
         block
-        type="dashed"
+        type='dashed'
         style={{
           marginBottom: 6,
           marginLeft: 0,
           marginRight: 0
         }}
         onClick={() => {
-          addChat()
+          addChat();
         }}
       >
         新建对话
       </Button>
-    )
-  }
+    );
+  };
 
   // 对接服务端方法
   async function serverChatCompletions({
@@ -85,42 +85,42 @@ function ChatPage() {
     signal,
     assistantMessageId
   }: {
-    userMessageId: string
-    requestOptions: RequestChatOptions
-    assistantMessageId: string
-    signal: AbortSignal
+    userMessageId: string;
+    requestOptions: RequestChatOptions;
+    assistantMessageId: string;
+    signal: AbortSignal;
   }) {
-    let result = ''
-    let status = 'loading'
+    let result = '';
+    let status = 'loading';
 
     const currentMessage = {
       content: requestOptions.prompt,
       role: 'user'
-    }
+    };
 
     const initialMessage = {
       requestOptions,
       role: 'assistant'
-    }
+    };
 
     const messages = getSelectedChat().data.map(({ role, text }) => {
       return {
         role,
         content: text
-      }
-    })
+      };
+    });
 
-    scrollToBottomIfAtBottom()
+    scrollToBottomIfAtBottom();
     await postChatCompletions([...messages, currentMessage], signal, {}, (ev) => {
       if (ev.data === '[DONE]') {
-        status = 'pass'
-        setLoading(false)
+        status = 'pass';
+        setLoading(false);
       } else {
         try {
-          const data = JSON.parse(ev.data)
-          result += data.choices[0].delta.content ? data.choices[0].delta.content : ''
+          const data = JSON.parse(ev.data);
+          result += data.choices[0].delta.content ? data.choices[0].delta.content : '';
         } catch (error) {
-          console.log(error)
+          console.log(error);
         }
       }
 
@@ -128,21 +128,21 @@ function ChatPage() {
         ...initialMessage,
         status,
         text: result
-      })
-    })
+      });
+    });
   }
 
   // 对话
   async function sendChatCompletions(vaule: string) {
-    const parentMessageId = chats.filter((c) => c.id === selectChatId)[0].id
-    const userMessageId = generateUUID()
+    const parentMessageId = chats.filter((c) => c.id === selectChatId)[0].id;
+    const userMessageId = generateUUID();
     const requestOptions = {
       prompt: vaule,
       parentMessageId,
       options: filterObjectNull({
         ...config
       })
-    }
+    };
     setChatInfo(selectChatId, {
       id: userMessageId,
       text: vaule,
@@ -150,8 +150,8 @@ function ChatPage() {
       status: 'pass',
       role: 'user',
       requestOptions
-    })
-    const assistantMessageId = generateUUID()
+    });
+    const assistantMessageId = generateUUID();
     setChatInfo(selectChatId, {
       id: assistantMessageId,
       text: '',
@@ -159,13 +159,13 @@ function ChatPage() {
       status: 'loading',
       role: 'assistant',
       requestOptions
-    })
+    });
     serverChatCompletions({
       requestOptions,
       signal: fetchController.current.signal,
       userMessageId,
       assistantMessageId
-    })
+    });
   }
 
   return (
@@ -177,13 +177,10 @@ function ChatPage() {
           routes: chats
         }}
         menuDataRender={(item) => {
-          return item
+          return item;
         }}
         menuItemRender={(item, dom) => {
-          const className =
-            item.id === selectChatId
-              ? `${styles.menuItem} ${styles.menuItem_action}`
-              : styles.menuItem
+          const className = item.id === selectChatId ? `${styles.menuItem} ${styles.menuItem_action}` : styles.menuItem;
           return (
             <div className={className}>
               <span className={styles.menuItem_icon}>
@@ -192,28 +189,28 @@ function ChatPage() {
               <span className={styles.menuItem_name}>{item.name}</span>
               <div className={styles.menuItem_options}>
                 <Popconfirm
-                  title="删除会话"
-                  description="是否确定删除会话？"
+                  title='删除会话'
+                  description='是否确定删除会话？'
                   onConfirm={() => {
-                    delChat(item.id)
+                    delChat(item.id);
                   }}
                   onCancel={() => {
                     // ==== 无操作 ====
                   }}
-                  okText="Yes"
-                  cancelText="No"
+                  okText='Yes'
+                  cancelText='No'
                 >
                   <DeleteOutlined />
                 </Popconfirm>
               </div>
             </div>
-          )
+          );
         }}
         menuFooterRender={(props) => {
           return (
-            <Space direction="vertical" style={{ width: '100%' }}>
+            <Space direction='vertical' style={{ width: '100%' }}>
               <Select
-                size="middle"
+                size='middle'
                 style={{ width: '100%' }}
                 defaultValue={config.model}
                 value={config.model}
@@ -222,13 +219,13 @@ function ChatPage() {
                   changeConfig({
                     ...config,
                     model: e.toString()
-                  })
+                  });
                 }}
               />
               <Button
                 block
                 onClick={() => {
-                  setRoleConfigModal({ open: true })
+                  setRoleConfigModal({ open: true });
                 }}
               >
                 角色预设
@@ -236,42 +233,42 @@ function ChatPage() {
               <Button
                 block
                 onClick={() => {
-                  setConfigModal(true)
+                  setConfigModal(true);
                 }}
               >
                 系统配置
               </Button>
               <Popconfirm
-                title="删除全部对话"
-                description="您确定删除全部会话对吗? "
+                title='删除全部对话'
+                description='您确定删除全部会话对吗? '
                 onConfirm={() => {
-                  clearChats()
+                  clearChats();
                 }}
                 onCancel={() => {
                   // ==== 无操作 ====
                 }}
-                okText="Yes"
-                cancelText="No"
+                okText='Yes'
+                cancelText='No'
               >
-                <Button block danger type="dashed" ghost>
+                <Button block danger type='dashed' ghost>
                   清除所有对话
                 </Button>
               </Popconfirm>
             </Space>
-          )
+          );
         }}
         menuProps={{
           onClick: (r) => {
-            const id = r.key.replace('/', '')
+            const id = r.key.replace('/', '');
             if (selectChatId !== id) {
-              changeSelectChatId(id)
+              changeSelectChatId(id);
             }
           }
         }}
       >
         <div className={styles.chatPage_container}>
           <div ref={scrollRef} className={styles.chatPage_container_one}>
-            <div id="image-wrapper">
+            <div id='image-wrapper'>
               {chatMessages.map((item) => {
                 return (
                   <ChatMessage
@@ -282,10 +279,10 @@ function ChatPage() {
                     time={item.dateTime}
                     model={item.requestOptions.options?.model}
                     onDelChatMessage={() => {
-                      delChatMessage(selectChatId, item.id)
+                      delChatMessage(selectChatId, item.id);
                     }}
                   />
-                )
+                );
               })}
               {chatMessages.length <= 0 && <Reminder />}
             </div>
@@ -294,18 +291,18 @@ function ChatPage() {
             <AllInput
               disabled={loading}
               onSend={(value) => {
-                if (value.startsWith('/')) return
-                sendChatCompletions(value)
-                setLoading(true)
-                scrollToBottomIfAtBottom()
+                if (value.startsWith('/')) return;
+                sendChatCompletions(value);
+                setLoading(true);
+                scrollToBottomIfAtBottom();
               }}
               clearMessage={() => {
-                clearChatMessage(selectChatId)
+                clearChatMessage(selectChatId);
               }}
               onStopFetch={() => {
                 // 结束
-                setLoading(false)
-                fetchController.current.abort()
+                setLoading(false);
+                fetchController.current.abort();
               }}
             />
           </div>
@@ -314,7 +311,7 @@ function ChatPage() {
 
       {/* AI角色预设 */}
       <Modal
-        title="AI角色预设"
+        title='AI角色预设'
         open={roleConfigModal.open}
         footer={null}
         destroyOnClose
@@ -341,6 +338,6 @@ function ChatPage() {
         />
       </Modal>
     </div>
-  )
+  );
 }
-export default ChatPage
+export default ChatPage;

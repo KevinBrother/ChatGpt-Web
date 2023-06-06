@@ -1,19 +1,19 @@
-import { create } from 'zustand'
-import { createJSONStorage, persist } from 'zustand/middleware'
-import { PromptInfo } from '../../types'
-import promptszh from '../../assets/prompts-zh.json'
+import { create } from 'zustand';
+import { createJSONStorage, persist } from 'zustand/middleware';
+import { PromptInfo } from '../../types';
+import promptszh from '../../assets/prompts-zh.json';
 
 export interface PromptState {
   // 本地角色
-  localPrompt: Array<PromptInfo>
+  localPrompt: Array<PromptInfo>;
   // 新增角色
-  addPrompts: (list: Array<PromptInfo>) => void
+  addPrompts: (list: Array<PromptInfo>) => void;
   // 清除所有角色
-  clearPrompts: () => void
+  clearPrompts: () => void;
   // 删除单个角色
-  delPrompt: (info: PromptInfo) => void
+  delPrompt: (info: PromptInfo) => void;
   // 编辑角色信息
-  editPrompt: (oldKey: string, info: PromptInfo) => void
+  editPrompt: (oldKey: string, info: PromptInfo) => void;
 }
 
 const promptStore = create<PromptState>()(
@@ -22,12 +22,12 @@ const promptStore = create<PromptState>()(
       localPrompt: [...promptszh],
       addPrompts: (list) =>
         set((state: PromptState) => {
-          const resultMap = new Map()
-          state.localPrompt.forEach((item) => resultMap.set(item.key, item))
-          list.forEach((item) => resultMap.set(item.key, item))
+          const resultMap = new Map();
+          state.localPrompt.forEach((item) => resultMap.set(item.key, item));
+          list.forEach((item) => resultMap.set(item.key, item));
           return {
             localPrompt: [...Array.from(resultMap.values())]
-          }
+          };
         }),
       clearPrompts: () => set({ localPrompt: [] }),
       editPrompt: (oldKey, info) =>
@@ -36,24 +36,22 @@ const promptStore = create<PromptState>()(
             if (oldKey === item.key) {
               return {
                 ...info
-              }
+              };
             }
             return {
               ...item
-            }
-          })
+            };
+          });
           return {
             localPrompt: [...newList]
-          }
+          };
         }),
       delPrompt: (info) =>
         set((state: PromptState) => {
-          const newList = state.localPrompt.filter(
-            (item) => item.key !== info.key && item.value !== info.value
-          )
+          const newList = state.localPrompt.filter((item) => item.key !== info.key && item.value !== info.value);
           return {
             localPrompt: [...newList]
-          }
+          };
         })
     }),
     {
@@ -61,6 +59,6 @@ const promptStore = create<PromptState>()(
       storage: createJSONStorage(() => localStorage) // (optional) by default the 'localStorage' is used
     }
   )
-)
+);
 
-export default promptStore
+export default promptStore;
