@@ -15,7 +15,7 @@ import { useScroll } from '../hooks/useScroll';
 import useDocumentResize from '../hooks/useDocumentResize';
 import Layout from '../components/Layout';
 
-function ChatPage() {
+export function ChatPage() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const { scrollToBottomIfAtBottom, scrollToBottom } = useScroll(scrollRef.current);
   const { config, models, changeConfig, setConfigModal } = configStore();
@@ -340,4 +340,3 @@ function ChatPage() {
     </div>
   );
 }
-export default ChatPage;
