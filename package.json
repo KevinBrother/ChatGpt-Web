@@ -31,6 +31,7 @@
     "antd": "5.5.0",
     "highlight.js": "^11.7.0",
     "markdown-it": "^13.0.1",
+    "@bixi-design/lint": "^4.0.0-alpha.0",
     "markdown-it-link-attributes": "^4.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
