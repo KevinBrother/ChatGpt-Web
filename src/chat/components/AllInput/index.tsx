@@ -32,14 +32,14 @@ function AllInput(props: Props) {
 
   return (
     <div className={styles.allInput}>
-      <div
+      {/*  <div
         className={styles.allInput_icon}
         onClick={() => {
           props?.clearMessage?.();
         }}
       >
         <ClearOutlined />
-      </div>
+      </div> */}
       <AutoComplete
         value={prompt}
         options={searchOptions}

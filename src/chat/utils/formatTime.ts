@@ -11,10 +11,10 @@ export function formatTime(fmt = 'yyyy-MM-dd HH:mm:ss', timeDate?: Date) {
     qq: Math.floor((date.getMonth() + 3) / 3), //季度
     S: date.getMilliseconds() //毫秒
   };
-  let rst = '';
+  let rst = fmt;
   Object.keys(o).forEach((i) => {
-    if (fmt.includes(i)) {
-      rst = fmt?.replace(i, o[i]);
+    if (rst.includes(i)) {
+      rst = rst?.replace(i, o[i]);
     }
   });
 
