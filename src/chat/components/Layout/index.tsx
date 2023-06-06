@@ -29,7 +29,6 @@ function Layout(props: Props) {
   const commonProps = {
     title: 'BIXI Chat',
     logo: 'https://u1.dl0.cn/icon/openailogo.svg',
-
     contentWidth: 'Fluid',
     fixedHeader: true,
     fixSiderbar: true,
@@ -48,15 +47,17 @@ function Layout(props: Props) {
     },
     suppressSiderWhenMenuEmpty: true,
     siderWidth: 300,
-    menuExtraRender: { menuExtraRender },
-    menuItemRender: { menuItemRender },
+    menuExtraRender: menuExtraRender,
+    menuItemRender: menuItemRender,
     route: props.mutil ? props.route : undefined,
     menuDataRender: props.menuDataRender,
-    avatarProps: {
-      src: 'http://rpa-docs.datagrand.com/v13_6/images/logo.png',
-      size: 'small',
-      render: (props, dom) => <>{dom}</>
-    },
+    avatarProps: props.header
+      ? {
+          src: 'http://rpa-docs.datagrand.com/v13_6/images/logo.png',
+          size: 'small',
+          render: (props, dom) => <>{dom}</>
+        }
+      : undefined,
     menuFooterRender: props.menuFooterRender,
     menuProps: props.menuProps
   };
