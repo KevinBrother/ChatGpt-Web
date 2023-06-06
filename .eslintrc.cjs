@@ -1,6 +1,7 @@
 module.exports = {
-  extends: ['./packages/lint/eslint'],
+  extends: [require.resolve('@bixi-design/lint/eslint')],
   rules: {
-    '@typescript-eslint/no-explicit-any': ['off']
+    '@typescript-eslint/no-explicit-any': ['warn'],
+    indent: ['off']
   }
-}
+};
