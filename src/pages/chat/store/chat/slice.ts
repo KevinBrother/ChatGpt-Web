@@ -8,7 +8,7 @@ export interface ChatState {
   chats: Array<ChatsInfo>
   // 当前选择的会话id
   selectChatId: string | number
-  // getSelectedChat: () => ChatsInfo
+  getSelectedChat: () => ChatsInfo
   // 新增一个对话
   addChat: () => void
   // 删除一个对话
@@ -40,11 +40,10 @@ const chatStore = create<ChatState>()(
     (set, get) => ({
       chats: [],
       selectChatId: '',
-      /* 
       getSelectedChat: () => {
         const { chats, selectChatId } = get()
         return chats.find((c) => c.id === selectChatId) || ({} as ChatsInfo)
-      }, */
+      },
       addChat: () =>
         set((state: ChatState) => {
           const info = generateChatInfo()

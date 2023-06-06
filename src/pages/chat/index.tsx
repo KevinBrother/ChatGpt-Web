@@ -28,6 +28,7 @@ function ChatPage() {
     addChat,
     delChat,
     clearChats,
+    getSelectedChat,
     selectChatId,
     changeSelectChatId,
     setChatInfo,
@@ -101,8 +102,16 @@ function ChatPage() {
       requestOptions,
       role: 'assistant'
     }
+
+    const messages = getSelectedChat().data.map(({ role, text }) => {
+      return {
+        role,
+        content: text
+      }
+    })
+
     scrollToBottomIfAtBottom()
-    await postChatCompletions([currentMessage], signal, {}, (ev) => {
+    await postChatCompletions([...messages, currentMessage], signal, {}, (ev) => {
       if (ev.data === '[DONE]') {
         status = 'pass'
         setLoading(false)
