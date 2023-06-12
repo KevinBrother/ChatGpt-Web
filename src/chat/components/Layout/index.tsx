@@ -30,8 +30,8 @@ function Layout(props: Props) {
     title: 'BIXI Chat',
     logo: 'https://u1.dl0.cn/icon/openailogo.svg',
     contentWidth: 'Fluid',
-    fixedHeader: true,
-    fixSiderbar: true,
+    fixedHeader: false,
+    fixSiderbar: false,
     contentStyle: {
       height: 'calc(100vh - 56px)',
       background: '#fff'
